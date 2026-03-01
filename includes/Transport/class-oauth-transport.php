@@ -68,7 +68,7 @@ class OAuthTransport extends HttpTransport {
 	 * @return mixed
 	 */
 	public function add_authenticate_header( $response, array $handler, \WP_REST_Request $request ) {
-		if ( ! isset( $handler['callback'][0] ) || ! ( $handler['callback'][0] instanceof self ) ) {
+		if ( ! isset( $handler['callback'][0] ) || $handler['callback'][0] !== $this ) {
 			return $response;
 		}
 

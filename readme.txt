@@ -4,7 +4,7 @@ Tags: oauth, oauth2, mcp, api, authentication
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -109,11 +109,19 @@ On uninstall, plugin-created OAuth database tables and generated signing keys ar
 
 == Changelog ==
 
+= 1.0.3 =
+
+* Fixed `WWW-Authenticate` `resource_metadata` URL resolution when multiple MCP servers are registered (default and custom).
+
 = 1.0.0 =
 
 * Initial stable release.
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+
+Fixes OAuth metadata/header behavior for multi-server MCP setups.
 
 = 1.0.0 =
 

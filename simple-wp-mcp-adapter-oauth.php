@@ -3,7 +3,7 @@
  * Plugin Name: Simple WP MCP Adapter OAuth
  * Plugin URI: https://samuelsena.blog
  * Description: Adds OAuth 2.1 authorization server support for the WordPress MCP Adapter plugin.
- * Version: 1.0.0
+ * Version: 1.0.3
  * Author: Samuel Sena
  * Author URI: https://samuelsena.blog
  * Requires at least: 6.8

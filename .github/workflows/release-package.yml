@@ -29,6 +29,16 @@ jobs:
       - name: Install production dependencies
         run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-progress
 
+      - name: Verify runtime dependencies exist
+        run: |
+          set -euo pipefail
+          test -f vendor/autoload_packages.php
+          test -f vendor/autoload.php
+          test -d vendor/league/oauth2-server
+          test -d vendor/guzzlehttp/psr7
+          test -d vendor/wordpress/mcp-adapter
+          test -d vendor/wordpress/abilities-api
+
       - name: Build plugin zip
         run: |
           set -euo pipefail
@@ -42,6 +52,16 @@ jobs:
             cd dist/build
             zip -rq "../${PLUGIN_SLUG}.zip" "${PLUGIN_SLUG}"
           )
+
+      - name: Verify packaged zip contents
+        run: |
+          set -euo pipefail
+          PLUGIN_SLUG="simple-wp-mcp-adapter-oauth"
+          unzip -l "dist/${PLUGIN_SLUG}.zip" | grep -q "vendor/autoload_packages.php"
+          unzip -l "dist/${PLUGIN_SLUG}.zip" | grep -q "vendor/league/oauth2-server/"
+          unzip -l "dist/${PLUGIN_SLUG}.zip" | grep -q "vendor/guzzlehttp/psr7/"
+          unzip -l "dist/${PLUGIN_SLUG}.zip" | grep -q "vendor/wordpress/mcp-adapter/"
+          unzip -l "dist/${PLUGIN_SLUG}.zip" | grep -q "vendor/wordpress/abilities-api/"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

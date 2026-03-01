@@ -26,8 +26,8 @@ jobs:
           php-version: "7.4"
           tools: composer:v2
 
-      - name: Install production dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-progress
+      - name: Install dependencies
+        run: composer install --optimize-autoloader --no-interaction --prefer-dist --no-progress
 
       - name: Verify runtime dependencies exist
         run: |

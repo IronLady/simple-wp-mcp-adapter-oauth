@@ -4,13 +4,6 @@
 composer.lock
 phpcs.xml.dist
 phpunit.xml.dist
-vendor/bin/
-vendor/phpunit/
-vendor/sebastian/
-vendor/squizlabs/
-vendor/wp-coding-standards/
-vendor/yoast/
-vendor/dealerdirect/
 tests/
 dist/
 scripts/

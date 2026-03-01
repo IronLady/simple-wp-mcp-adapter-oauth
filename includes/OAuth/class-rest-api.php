@@ -49,7 +49,8 @@ class REST_API {
 	 * Constructor.
 	 */
 	private function __construct() {
-		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		// McpAdapter initializes servers on rest_api_init priority 15.
+		add_action( 'rest_api_init', array( $this, 'register_routes' ), 20 );
 		add_filter( 'determine_current_user', array( $this, 'authenticate_request' ), 15 );
 		add_action( 'admin_post_simple_mcp_oauth_authorize', array( $this, 'handle_authorize_admin_post' ) );
 		add_action( 'admin_post_nopriv_simple_mcp_oauth_authorize', array( $this, 'handle_authorize_admin_post' ) );
@@ -367,6 +368,10 @@ class REST_API {
 	 * @return array<int, array<string, string>>
 	 */
 	private function get_oauth_server_routes( $require_metadata_route = true ) {
+		if ( ! did_action( 'mcp_adapter_init' ) ) {
+			return array();
+		}
+
 		$adapter = McpAdapter::instance();
 		$servers = $adapter->get_servers();
 		$result  = array();

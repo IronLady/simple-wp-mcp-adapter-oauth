@@ -159,6 +159,12 @@ class Register_Endpoint extends Base_Endpoint {
 		);
 	}
 
+	/**
+	 * Persist registered client data.
+	 *
+	 * @param array<string, mixed> $client Client data.
+	 * @return void
+	 */
 	private function save_registered_client( $client ) {
 		global $wpdb;
 
@@ -189,6 +195,12 @@ class Register_Endpoint extends Base_Endpoint {
 		);
 	}
 
+	/**
+	 * Delete a registered client.
+	 *
+	 * @param string $client_id Client identifier.
+	 * @return void
+	 */
 	private function delete_registered_client( $client_id ) {
 		global $wpdb;
 
@@ -230,6 +242,11 @@ class Register_Endpoint extends Base_Endpoint {
 		return '';
 	}
 
+	/**
+	 * Generate dynamic registration client ID.
+	 *
+	 * @return string
+	 */
 	private function generate_client_id() {
 		try {
 			return bin2hex( random_bytes( 16 ) );
@@ -238,6 +255,11 @@ class Register_Endpoint extends Base_Endpoint {
 		}
 	}
 
+	/**
+	 * Generate client secret.
+	 *
+	 * @return string
+	 */
 	private function generate_client_secret() {
 		try {
 			return bin2hex( random_bytes( 24 ) );
@@ -246,6 +268,11 @@ class Register_Endpoint extends Base_Endpoint {
 		}
 	}
 
+	/**
+	 * Generate registration access token.
+	 *
+	 * @return string
+	 */
 	private function generate_registration_access_token() {
 		try {
 			return bin2hex( random_bytes( 24 ) );

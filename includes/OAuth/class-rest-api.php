@@ -33,6 +33,11 @@ class REST_API {
 	 */
 	private $resource_server;
 
+	/**
+	 * Get singleton instance.
+	 *
+	 * @return REST_API
+	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
@@ -40,6 +45,9 @@ class REST_API {
 		return self::$instance;
 	}
 
+	/**
+	 * Constructor.
+	 */
 	private function __construct() {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_filter( 'determine_current_user', array( $this, 'authenticate_request' ), 15 );
@@ -48,6 +56,11 @@ class REST_API {
 		$this->setup_server();
 	}
 
+	/**
+	 * Set up OAuth authorization/resource servers.
+	 *
+	 * @return void
+	 */
 	private function setup_server() {
 		$client_repository        = new ClientRepository();
 		$access_token_repository  = new AccessTokenRepository();
@@ -103,6 +116,11 @@ class REST_API {
 		);
 	}
 
+	/**
+	 * Get authorization server instance.
+	 *
+	 * @return AuthorizationServer
+	 */
 	public function get_server() {
 		return $this->server;
 	}
@@ -146,6 +164,11 @@ class REST_API {
 		}
 	}
 
+	/**
+	 * Register OAuth REST routes.
+	 *
+	 * @return void
+	 */
 	public function register_routes() {
 		$token_endpoint     = new Endpoints\Token_Endpoint( $this->server );
 		$jwks_endpoint      = new Endpoints\JWKS_Endpoint();

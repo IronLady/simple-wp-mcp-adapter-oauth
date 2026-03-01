@@ -7,6 +7,12 @@ use SimpleWpMcpAdapterOAuth\OAuth\Data_Store;
 
 class ClientRepository implements ClientRepositoryInterface {
 
+	/**
+	 * Retrieve client entity by identifier.
+	 *
+	 * @param string $client_identifier Client identifier.
+	 * @return ClientEntity|null
+	 */
 	public function getClientEntity( $client_identifier ) {
 		global $wpdb;
 
@@ -49,6 +55,14 @@ class ClientRepository implements ClientRepositoryInterface {
 		return $client;
 	}
 
+	/**
+	 * Validate client credentials for a grant.
+	 *
+	 * @param string      $client_identifier Client identifier.
+	 * @param string|null $client_secret Client secret.
+	 * @param string|null $grant_type Grant type.
+	 * @return bool
+	 */
 	public function validateClient( $client_identifier, $client_secret, $grant_type = null ) {
 		global $wpdb;
 

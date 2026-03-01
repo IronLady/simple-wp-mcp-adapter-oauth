@@ -8,6 +8,11 @@ class UserEntity implements UserEntityInterface {
 
 	use EntityTrait;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param int|string $identifier User identifier.
+	 */
 	public function __construct( $identifier ) {
 		$this->setIdentifier( $identifier );
 	}

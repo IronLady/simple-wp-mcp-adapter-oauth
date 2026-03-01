@@ -110,6 +110,11 @@ function simple_wpmcp_adapter_oauth_keys_error_notice() {
  * Activation hook.
  */
 register_activation_hook( __FILE__, 'simple_wpmcp_adapter_oauth_activate' );
+/**
+ * Run plugin activation checks and setup.
+ *
+ * @return void
+ */
 function simple_wpmcp_adapter_oauth_activate() {
 	if ( ! class_exists( McpAdapter::class ) ) {
 		wp_die( esc_html__( 'WP Simple MCP Adapter OAuth requires the MCP Adapter plugin. Please install and activate it to activate this plugin.', 'simple-wp-mcp-adapter-oauth' ) );

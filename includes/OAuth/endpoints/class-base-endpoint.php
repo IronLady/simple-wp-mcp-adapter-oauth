@@ -52,6 +52,12 @@ abstract class Base_Endpoint {
 			->withParsedBody( $request->get_params() );
 	}
 
+	/**
+	 * Send a PSR-7 response and terminate execution.
+	 *
+	 * @param \Psr\Http\Message\ResponseInterface $response Response object.
+	 * @return void
+	 */
 	protected function send_psr_response( $response ) {
 		foreach ( $response->getHeaders() as $name => $values ) {
 			foreach ( $values as $value ) {
@@ -63,6 +69,12 @@ abstract class Base_Endpoint {
 		exit;
 	}
 
+	/**
+	 * Convert OAuth server exception to WP REST response.
+	 *
+	 * @param \League\OAuth2\Server\Exception\OAuthServerException $exception OAuth exception.
+	 * @return \WP_REST_Response
+	 */
 	protected function handle_oauth_exception( $exception ) {
 		return new \WP_REST_Response(
 			array(

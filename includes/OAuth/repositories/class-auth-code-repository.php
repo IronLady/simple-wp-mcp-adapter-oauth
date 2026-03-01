@@ -8,11 +8,22 @@ use SimpleWpMcpAdapterOAuth\OAuth\Data_Store;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface {
 
+	/**
+	 * Create a new authorization code entity.
+	 *
+	 * @return AuthCodeEntityInterface
+	 */
 	public function getNewAuthCode() {
 		// phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return new AuthCodeEntity();
 	}
 
+	/**
+	 * Persist a newly issued authorization code.
+	 *
+	 * @param AuthCodeEntityInterface $auth_code_entity Authorization code.
+	 * @return void
+	 */
 	public function persistNewAuthCode( AuthCodeEntityInterface $auth_code_entity ) {
 		global $wpdb;
 
@@ -39,6 +50,12 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface {
 		);
 	}
 
+	/**
+	 * Revoke authorization code.
+	 *
+	 * @param string $code_id Authorization code ID.
+	 * @return void
+	 */
 	public function revokeAuthCode( $code_id ) {
 		global $wpdb;
 
@@ -52,6 +69,12 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface {
 		);
 	}
 
+	/**
+	 * Determine whether authorization code is revoked/expired.
+	 *
+	 * @param string $code_id Authorization code ID.
+	 * @return bool
+	 */
 	public function isAuthCodeRevoked( $code_id ) {
 		global $wpdb;
 

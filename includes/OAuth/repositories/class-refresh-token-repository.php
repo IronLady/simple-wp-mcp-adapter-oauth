@@ -8,11 +8,22 @@ use SimpleWpMcpAdapterOAuth\OAuth\Data_Store;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface {
 
+	/**
+	 * Create a new refresh token entity.
+	 *
+	 * @return RefreshTokenEntityInterface
+	 */
 	public function getNewRefreshToken() {
 		// phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return new RefreshTokenEntity();
 	}
 
+	/**
+	 * Persist a newly issued refresh token.
+	 *
+	 * @param RefreshTokenEntityInterface $refresh_token_entity Refresh token.
+	 * @return void
+	 */
 	public function persistNewRefreshToken( RefreshTokenEntityInterface $refresh_token_entity ) {
 		global $wpdb;
 
@@ -38,6 +49,12 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface {
 		);
 	}
 
+	/**
+	 * Revoke refresh token by ID.
+	 *
+	 * @param string $token_id Token identifier.
+	 * @return void
+	 */
 	public function revokeRefreshToken( $token_id ) {
 		global $wpdb;
 
@@ -51,6 +68,12 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface {
 		);
 	}
 
+	/**
+	 * Determine whether refresh token is revoked/expired.
+	 *
+	 * @param string $token_id Token identifier.
+	 * @return bool
+	 */
 	public function isRefreshTokenRevoked( $token_id ) {
 		global $wpdb;
 

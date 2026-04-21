@@ -17,9 +17,10 @@ class Data_Store {
 		global $wpdb;
 
 		$tables = array(
-			'clients'        => $wpdb->prefix . 'simple_mcp_oauth_clients',
-			'auth_codes'     => $wpdb->prefix . 'simple_mcp_oauth_auth_codes',
-			'refresh_tokens' => $wpdb->prefix . 'simple_mcp_oauth_refresh_tokens',
+			'clients'                => $wpdb->prefix . 'simple_mcp_oauth_clients',
+			'auth_codes'             => $wpdb->prefix . 'simple_mcp_oauth_auth_codes',
+			'refresh_tokens'         => $wpdb->prefix . 'simple_mcp_oauth_refresh_tokens',
+			'revoked_access_tokens'  => $wpdb->prefix . 'simple_mcp_oauth_revoked_access_tokens',
 		);
 
 		return isset( $tables[ $key ] ) ? $tables[ $key ] : '';
@@ -85,8 +86,18 @@ class Data_Store {
 			KEY revoked (revoked)
 		) {$charset_collate};";
 
+		$revoked_access_tokens = self::table( 'revoked_access_tokens' );
+
+		$sql_revoked_access_tokens = "CREATE TABLE {$revoked_access_tokens} (
+			token_id varchar(191) NOT NULL,
+			revoked_at datetime NOT NULL,
+			PRIMARY KEY  (token_id),
+			KEY revoked_at (revoked_at)
+		) {$charset_collate};";
+
 		dbDelta( $sql_clients );
 		dbDelta( $sql_auth_codes );
 		dbDelta( $sql_refresh_tokens );
+		dbDelta( $sql_revoked_access_tokens );
 	}
 }

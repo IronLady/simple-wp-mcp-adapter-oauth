@@ -83,33 +83,28 @@ class REST_API {
 			$public_key
 		);
 
+		$auth_code_ttl    = $this->make_interval( apply_filters( 'simple_wp_mcp_oauth_auth_code_ttl', 'PT10M' ) );
+		$access_token_ttl = $this->make_interval( apply_filters( 'simple_wp_mcp_oauth_access_token_ttl', 'PT1H' ) );
+		$refresh_token_ttl = $this->make_interval( apply_filters( 'simple_wp_mcp_oauth_refresh_token_ttl', 'P1M' ) );
+
 		// Authorization Code Grant.
 		$auth_code_grant = new AuthCodeGrant(
 			$auth_code_repository,
 			$refresh_token_repository,
-			new \DateInterval( 'PT10M' )
+			$auth_code_ttl
 		);
-		$auth_code_grant->setRefreshTokenTTL( new \DateInterval( 'P1M' ) );
+		$auth_code_grant->setRefreshTokenTTL( $refresh_token_ttl );
 
-		$this->server->enableGrantType(
-			$auth_code_grant,
-			new \DateInterval( 'PT1H' )
-		);
+		$this->server->enableGrantType( $auth_code_grant, $access_token_ttl );
 
 		// Refresh Token Grant.
 		$refresh_token_grant = new RefreshTokenGrant( $refresh_token_repository );
-		$refresh_token_grant->setRefreshTokenTTL( new \DateInterval( 'P1M' ) );
+		$refresh_token_grant->setRefreshTokenTTL( $refresh_token_ttl );
 
-		$this->server->enableGrantType(
-			$refresh_token_grant,
-			new \DateInterval( 'PT1H' )
-		);
+		$this->server->enableGrantType( $refresh_token_grant, $access_token_ttl );
 
 		// Client Credentials Grant.
-		$this->server->enableGrantType(
-			new ClientCredentialsGrant(),
-			new \DateInterval( 'PT1H' )
-		);
+		$this->server->enableGrantType( new ClientCredentialsGrant(), $access_token_ttl );
 
 		$this->resource_server = new ResourceServer(
 			$access_token_repository,
@@ -175,6 +170,7 @@ class REST_API {
 		$jwks_endpoint      = new Endpoints\JWKS_Endpoint();
 		$discovery_endpoint = new Endpoints\Discovery_Endpoint();
 		$register_endpoint  = new Endpoints\Register_Endpoint();
+		$revoke_endpoint    = new Endpoints\Revoke_Endpoint();
 
 		foreach ( $this->get_oauth_server_routes() as $oauth_server_route ) {
 			$namespace = $oauth_server_route['namespace'];
@@ -227,6 +223,16 @@ class REST_API {
 				array(
 					'methods'             => array( 'GET', 'PUT', 'DELETE' ),
 					'callback'            => array( $register_endpoint, 'handle_manage' ),
+					'permission_callback' => '__return_true',
+				)
+			);
+
+			register_rest_route(
+				$namespace,
+				$base . '/revoke',
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( $revoke_endpoint, 'handle_request' ),
 					'permission_callback' => '__return_true',
 				)
 			);
@@ -406,5 +412,26 @@ class REST_API {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Create a DateInterval from an ISO 8601 duration string, falling back to
+	 * the provided default if the value is invalid.
+	 *
+	 * @param mixed  $value    Filter value (expected ISO 8601 string, e.g. 'PT1H').
+	 * @param string $fallback Valid ISO 8601 string used when $value is unusable.
+	 * @return \DateInterval
+	 */
+	private function make_interval( $value, $fallback = 'PT1H' ) {
+		if ( $value instanceof \DateInterval ) {
+			return $value;
+		}
+
+		try {
+			return new \DateInterval( (string) $value );
+		} catch ( \Exception $exception ) {
+			unset( $exception );
+			return new \DateInterval( $fallback );
+		}
 	}
 }

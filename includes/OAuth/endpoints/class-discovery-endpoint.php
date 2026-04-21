@@ -21,13 +21,15 @@ class Discovery_Endpoint extends Base_Endpoint {
 			'issuer'                                => untrailingslashit( $base ),
 			'authorization_endpoint'                => admin_url( 'admin-post.php?action=simple_mcp_oauth_authorize' ),
 			'token_endpoint'                        => $base . '/token',
+			'revocation_endpoint'                   => $base . '/revoke',
 			'registration_endpoint'                 => $base . '/register',
 			'jwks_uri'                              => $base . '/.well-known/jwks.json',
 			'response_types_supported'              => array( 'code' ),
-			'scopes_supported'                      => array( 'profile', 'email' ),
+			'scopes_supported'                      => apply_filters( 'simple_wp_mcp_oauth_allowed_scopes', array( 'profile', 'email' ) ),
 			'token_endpoint_auth_methods_supported' => array( 'none' ),
 			'grant_types_supported'                 => array( 'authorization_code', 'refresh_token', 'client_credentials' ),
 			'code_challenge_methods_supported'      => array( 'S256' ),
+			'revocation_endpoint_auth_methods_supported' => array( 'none' ),
 		);
 		return new \WP_REST_Response( $config, 200 );
 	}

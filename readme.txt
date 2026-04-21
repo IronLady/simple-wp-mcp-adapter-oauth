@@ -4,7 +4,7 @@ Tags: oauth, oauth2, mcp, api, authentication
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -109,6 +109,18 @@ On uninstall, plugin-created OAuth database tables and generated signing keys ar
 
 == Changelog ==
 
+= 1.1.0 =
+
+* Fixed PHPCS violations across changed files.
+
+= 1.1.0 =
+
+* Added RFC 7009 token revocation endpoint (`POST /revoke`) with JTI blocklist for access tokens and DB revocation for refresh tokens.
+* Enforced allowed scope list in `ScopeRepository`; unknown scopes are now rejected. Extendable via `simple_wp_mcp_oauth_allowed_scopes` filter.
+* Added filters for configurable token lifetimes: `simple_wp_mcp_oauth_auth_code_ttl`, `simple_wp_mcp_oauth_access_token_ttl`, `simple_wp_mcp_oauth_refresh_token_ttl`.
+* Improved OAuth consent screen using WordPress login page styles and a separate stylesheet.
+* Added `revocation_endpoint` to OAuth discovery document.
+
 = 1.0.3 =
 
 * Fixed `WWW-Authenticate` `resource_metadata` URL resolution when multiple MCP servers are registered (default and custom).
@@ -118,6 +130,14 @@ On uninstall, plugin-created OAuth database tables and generated signing keys ar
 * Initial stable release.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+
+Fixes PHPCS violations introduced in 1.1.0.
+
+= 1.1.0 =
+
+Adds token revocation, scope enforcement, configurable TTL filters, and an improved consent screen.
 
 = 1.0.3 =
 

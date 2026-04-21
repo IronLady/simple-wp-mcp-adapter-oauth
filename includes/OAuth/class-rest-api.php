@@ -83,8 +83,8 @@ class REST_API {
 			$public_key
 		);
 
-		$auth_code_ttl    = $this->make_interval( apply_filters( 'simple_wp_mcp_oauth_auth_code_ttl', 'PT10M' ) );
-		$access_token_ttl = $this->make_interval( apply_filters( 'simple_wp_mcp_oauth_access_token_ttl', 'PT1H' ) );
+		$auth_code_ttl     = $this->make_interval( apply_filters( 'simple_wp_mcp_oauth_auth_code_ttl', 'PT10M' ) );
+		$access_token_ttl  = $this->make_interval( apply_filters( 'simple_wp_mcp_oauth_access_token_ttl', 'PT1H' ) );
 		$refresh_token_ttl = $this->make_interval( apply_filters( 'simple_wp_mcp_oauth_refresh_token_ttl', 'P1M' ) );
 
 		// Authorization Code Grant.

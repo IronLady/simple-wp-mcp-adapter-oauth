@@ -87,45 +87,80 @@ class Authorize_Endpoint extends Base_Endpoint {
 		// IMPORTANT: We MUST preserve all OAuth parameters in the query string so that
 		// validateAuthorizationRequest() succeeds when processing the POST submission.
 		$form_action_url = $this->get_current_url();
-		?>
-<div
-	style="max-width: 500px; margin: 50px auto; font-family: sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-	<h1>
-		<?php esc_html_e( 'Authorize Access', 'simple-wp-mcp-adapter-oauth' ); ?>
-	</h1>
-	<p>
-		<?php
-		/* translators: %s: Client Name */
-		echo wp_kses_post( sprintf( __( 'The application <strong>%s</strong> is requesting access to your account.', 'simple-wp-mcp-adapter-oauth' ), esc_html( $auth_request->getClient()->getName() ) ) );
-		?>
-	</p>
-	<hr>
+		$client_name     = esc_html( $auth_request->getClient()->getName() );
+		$current_user    = wp_get_current_user();
+		$scopes          = $auth_request->getScopes();
 
-	<form method="post" action="<?php echo esc_url( $form_action_url ); ?>">
-		<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'oauth2_consent' ) ); ?>">
-
+		wp_enqueue_style( 'login' );
+		wp_enqueue_style(
+			'mcp-oauth-consent',
+			plugin_dir_url( SIMPLE_WP_MCP_ADAPTER_OAUTH_FILE ) . 'assets/css/consent-screen.css',
+			array( 'login' ),
+			SIMPLE_WP_MCP_ADAPTER_OAUTH_VERSION
+		);
+		?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title><?php esc_html_e( 'Authorize Access', 'simple-wp-mcp-adapter-oauth' ); ?> &lsaquo; <?php bloginfo( 'name' ); ?></title>
+		<?php wp_print_styles( array( 'login', 'mcp-oauth-consent' ) ); ?>
+</head>
+<body class="login">
+<div id="login">
 		<?php
-		// Also pass them as hidden fields for good measure/standard form handling.
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		foreach ( $_GET as $key => $value ) {
-			if ( is_scalar( $value ) ) {
-				echo '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( wp_unslash( $value ) ) . '">';
+		$logo_url = function_exists( 'get_custom_logo' ) ? get_site_url() : 'https://wordpress.org/';
+		?>
+	<h1><a href="<?php echo esc_url( $logo_url ); ?>"><?php bloginfo( 'name' ); ?></a></h1>
+
+	<div class="mcp-oauth-card">
+		<h1><?php echo esc_html( $client_name ); ?></h1>
+		<p class="mcp-oauth-meta">
+			<?php
+			/* translators: %s: WordPress username */
+			printf( esc_html__( 'Signed in as %s', 'simple-wp-mcp-adapter-oauth' ), '<strong>' . esc_html( $current_user->user_login ) . '</strong>' );
+			?>
+		</p>
+
+		<?php if ( ! empty( $scopes ) ) : ?>
+		<p style="font-size:13px;color:#1d2327;margin-bottom:8px;">
+			<?php esc_html_e( 'This application is requesting permission to:', 'simple-wp-mcp-adapter-oauth' ); ?>
+		</p>
+		<ul class="mcp-oauth-scopes">
+			<?php foreach ( $scopes as $scope ) : ?>
+			<li><?php echo esc_html( $scope->getIdentifier() ); ?></li>
+			<?php endforeach; ?>
+		</ul>
+		<?php endif; ?>
+
+		<form method="post" action="<?php echo esc_url( $form_action_url ); ?>">
+			<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'oauth2_consent' ) ); ?>">
+			<?php
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			foreach ( $_GET as $key => $value ) {
+				if ( is_scalar( $value ) ) {
+					echo '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( wp_unslash( $value ) ) . '">';
+				}
 			}
-		}
-		?>
+			?>
+			<div class="mcp-oauth-actions">
+				<button type="submit" name="approval_action" value="approve" class="button button-primary">
+					<?php esc_html_e( 'Approve', 'simple-wp-mcp-adapter-oauth' ); ?>
+				</button>
+				<button type="submit" name="approval_action" value="deny" class="button">
+					<?php esc_html_e( 'Deny', 'simple-wp-mcp-adapter-oauth' ); ?>
+				</button>
+			</div>
+		</form>
+	</div>
 
-		<div style="display: flex; gap: 10px; margin-top: 20px;">
-			<button type="submit" name="approval_action" value="approve"
-				style="background: #2271b1; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; font-size: 16px;">
-				<?php esc_html_e( 'Approve', 'simple-wp-mcp-adapter-oauth' ); ?>
-			</button>
-			<button type="submit" name="approval_action" value="deny"
-				style="background: #f6f7f7; color: #d63638; padding: 10px 20px; border: 1px solid #d63638; cursor: pointer; border-radius: 4px; font-size: 16px;">
-				<?php esc_html_e( 'Deny', 'simple-wp-mcp-adapter-oauth' ); ?>
-			</button>
-		</div>
-	</form>
+	<p class="privacy-policy-page-link" style="text-align:center;margin-top:16px;">
+		<?php bloginfo( 'name' ); ?>
+	</p>
 </div>
+</body>
+</html>
 		<?php
 	}
 

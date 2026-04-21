@@ -17,10 +17,10 @@ class Data_Store {
 		global $wpdb;
 
 		$tables = array(
-			'clients'                => $wpdb->prefix . 'simple_mcp_oauth_clients',
-			'auth_codes'             => $wpdb->prefix . 'simple_mcp_oauth_auth_codes',
-			'refresh_tokens'         => $wpdb->prefix . 'simple_mcp_oauth_refresh_tokens',
-			'revoked_access_tokens'  => $wpdb->prefix . 'simple_mcp_oauth_revoked_access_tokens',
+			'clients'               => $wpdb->prefix . 'simple_mcp_oauth_clients',
+			'auth_codes'            => $wpdb->prefix . 'simple_mcp_oauth_auth_codes',
+			'refresh_tokens'        => $wpdb->prefix . 'simple_mcp_oauth_refresh_tokens',
+			'revoked_access_tokens' => $wpdb->prefix . 'simple_mcp_oauth_revoked_access_tokens',
 		);
 
 		return isset( $tables[ $key ] ) ? $tables[ $key ] : '';

@@ -79,10 +79,10 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
 		global $wpdb;
 
 		$table = Data_Store::table( 'revoked_access_tokens' );
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is from internal Data_Store::table() mapping.
-		$count = $wpdb->get_var(
+		$count = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				'SELECT COUNT(*) FROM ' . $table . ' WHERE token_id = %s',
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is from internal Data_Store::table() mapping.
+				"SELECT COUNT(*) FROM `{$table}` WHERE token_id = %s",
 				$token_id
 			)
 		);

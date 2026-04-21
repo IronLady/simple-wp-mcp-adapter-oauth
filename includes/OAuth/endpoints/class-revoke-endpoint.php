@@ -86,6 +86,7 @@ class Revoke_Endpoint extends Base_Endpoint {
 			$parts[1] .= str_repeat( '=', 4 - $padding );
 		}
 
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- decoding JWT payload, not obfuscating code.
 		$payload = json_decode( base64_decode( strtr( $parts[1], '-_', '+/' ) ), true );
 		if ( ! is_array( $payload ) || empty( $payload['jti'] ) ) {
 			return null;
